@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
             left: 0;
             right: 0;
             height: 65px;
-            background: black;
+            background: pink;
             backdrop-filter: blur(10px);
             color: white;
             display: flex;
@@ -963,3 +963,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 });
+
