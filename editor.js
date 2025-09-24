@@ -958,15 +958,8 @@ document.addEventListener("DOMContentLoaded", () => {
     setInterval(() => {
         editorState.showStatus('Auto-saved');
     }, 120000);
-
-    const textInputs = document.querySelectorAll('input[type="text"]');
-
-textInputs.forEach(input => {
-    if(input.placeholder === 'Link text...') {
-        input.disabled = true;
-    }
 });
-});
+
 
 
 
