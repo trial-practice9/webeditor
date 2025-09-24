@@ -614,6 +614,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 textInput.type = "text";
                 textInput.value = el.innerText.trim();
                 textInput.placeholder = "Link text...";
+                textInput.disabled = true; // Disable direct editing of link text
                 
                 let textDebounceTimer;
                 textInput.addEventListener("input", () => {
@@ -958,10 +959,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setInterval(() => {
         editorState.showStatus('Auto-saved');
     }, 120000);
+
+
+
 });
-
-
-
-
-
-
