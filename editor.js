@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // CSS Injection for Professional Styling
     const editorCSS = `
-        <style>
+        <style data="remove">
         
         * { box-sizing: border-box; }
         
@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
             left: 0;
             right: 0;
             height: 65px;
-            background: pink;
+            background: rgba(0,0,0,0.7);
             backdrop-filter: blur(10px);
             color: white;
             display: flex;
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
             right: -420px;
             width: 420px;
             height: calc(100vh - 65px);
-            background: #000000ff;
+            background: rgba(0,0,0,0.7);
             backdrop-filter: blur(20px);
             border-left: 1px solid #e5e7eb;
             transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -83,7 +83,29 @@ document.addEventListener("DOMContentLoaded", () => {
             right: 0;
         }
         
-        #editor-sidebar h3 {
+        #links-sidebar {
+            position: fixed;
+            z-index: 99998;
+            top: 65px;
+            left: -420px;
+            width: 420px;
+            height: calc(100vh - 65px);
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid #e5e7eb;
+            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            box-shadow: 5px 0 25px rgba(0,0,0,0.1);
+        }
+        
+        #links-sidebar.open {
+            left: 0;
+        }
+        
+        #editor-sidebar h3, #links-sidebar h3 {
             background: white;
             margin: 0;
             padding: 20px 25px;
@@ -94,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
             display: flex;
             align-items: center;
             gap: 10px;
-            background: #000000ff;
+            background: rgba(0,0,0,0.7);
         }
         
         .sidebar-content {
@@ -123,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .controls-section {
             margin-bottom: 25px;
             padding: 20px;
-            background: #000000ff;
+            background: rgba(0,0,0,0.7);
             border-radius: 12px;
             border: 1px solid #e2e8f0;
         }
@@ -172,6 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
             transition: all 0.3s ease;
             background: #333435ff;
             margin-bottom: 25px;
+            color: white;
         }
         
         #search-input:focus {
@@ -242,7 +265,21 @@ document.addEventListener("DOMContentLoaded", () => {
             resize: none;
         }
         
-        .editor-item textarea:focus, .editor-item input[type="text"]:focus, .editor-item input[type="url"]:focus {
+        .editor-item input[type="color"] {
+            width: 100%;
+            height: 45px;
+            border: 2px solid #373738ff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #333435ff;
+        }
+        
+        .editor-item input[type="color"]:hover {
+            border-color: #667eea;
+        }
+        
+        .editor-item textarea:focus, .editor-item input[type="text"]:focus, .editor-item input[type="url"]:focus, .editor-item input[type="color"]:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
@@ -266,6 +303,34 @@ document.addEventListener("DOMContentLoaded", () => {
         .link-inputs {
             display: grid;
             gap: 10px;
+        }
+        
+        .link-item {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #020202ff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .link-item:hover {
+            border-color: #667eea;
+            background: #111111ff;
+        }
+        
+        .link-text {
+            color: #ffffffff;
+            font-weight: 500;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .link-url {
+            color: #9ca3af;
+            font-size: 12px;
+            word-break: break-all;
         }
         
         .element-counter {
@@ -295,7 +360,7 @@ document.addEventListener("DOMContentLoaded", () => {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background: linear-gradient(135deg, #6324f7ff 0%, #6108d6ff 100%);
             color: white;
             border: none;
             padding: 18px 28px;
@@ -303,9 +368,9 @@ document.addEventListener("DOMContentLoaded", () => {
             cursor: pointer;
             font-weight: 600;
             font-size: 15px;
-            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+            box-shadow: 0 8px 25px rgba(162, 1, 255, 0.75);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 10000;
+            z-index: 1099000;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -313,7 +378,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         #save-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 35px rgba(16, 185, 129, 0.5);
+            box-shadow: 0 12px 35px rgba(89, 20, 216, 0.5);
         }
         
         .status-indicator {
@@ -341,7 +406,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         
         .status-indicator.success {
-            background: #059669;
+            background: #6f0bccff;
         }
         
         .status-indicator.error {
@@ -362,9 +427,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         
         @media (max-width: 768px) {
-            #editor-sidebar {
+            #editor-sidebar, #links-sidebar {
                 width: 100vw;
+            }
+            
+            #editor-sidebar {
                 right: -100vw;
+            }
+            
+            #links-sidebar {
+                left: -100vw;
             }
             
             .nav-right {
@@ -425,6 +497,7 @@ document.addEventListener("DOMContentLoaded", () => {
         isEditorElement(el) {
             return el.closest("#editor-navbar") || 
                    el.closest("#editor-sidebar") || 
+                   el.closest("#links-sidebar") || 
                    el.closest("#save-btn") ||
                    el.closest(".status-indicator");
         }
@@ -467,8 +540,9 @@ document.addEventListener("DOMContentLoaded", () => {
             <span class="raxlogo">⚡ Raxinoity Editor</span>
         </div>
         <div class="nav-right">
+            <button id="show-links">🔗 Links</button>
             <button id="toggle-sidebar">📂 Elements</button>
-            <button id="export-btn">💾 Export</button>
+          
         </div>
     `;
     document.body.prepend(navbar);
@@ -512,9 +586,25 @@ document.addEventListener("DOMContentLoaded", () => {
                 <h4>🎨 Backgrounds <span id="bg-count">(0)</span></h4>
                 <div id="bg-editors"></div>
             </div>
+            
+            <div class="section">
+                <h4>🎨 Element Colors <span id="color-count">(0)</span></h4>
+                <div id="color-editors"></div>
+            </div>
         </div>
     `;
     document.body.appendChild(sidebar);
+
+    /* ---------------- LINKS SIDEBAR ---------------- */
+    let linksSidebar = document.createElement("div");
+    linksSidebar.id = "links-sidebar";
+    linksSidebar.innerHTML = `
+        <h3>🔗 All Links</h3>
+        <div class="sidebar-content">
+            <div id="links-list"></div>
+        </div>
+    `;
+    document.body.appendChild(linksSidebar);
 
     /* ---------------- SAVE BUTTON ---------------- */
     let saveBtn = document.createElement("button");
@@ -527,7 +617,22 @@ document.addEventListener("DOMContentLoaded", () => {
     // Sidebar Toggle
     document.getElementById("toggle-sidebar").addEventListener("click", () => {
         sidebar.classList.toggle("open");
+        // Close links sidebar if open
+        linksSidebar.classList.remove("open");
         editorState.showStatus(sidebar.classList.contains("open") ? 'Sidebar Opened' : 'Sidebar Closed');
+    });
+    
+    // Links Sidebar Toggle
+    document.getElementById("show-links").addEventListener("click", () => {
+        linksSidebar.classList.toggle("open");
+        // Close elements sidebar if open
+        sidebar.classList.remove("open");
+        if (linksSidebar.classList.contains("open")) {
+            showAllLinks();
+            editorState.showStatus('Links Panel Opened');
+        } else {
+            editorState.showStatus('Links Panel Closed');
+        }
     });
     
     document.getElementById('clear-all').addEventListener('click', () => {
@@ -541,27 +646,83 @@ document.addEventListener("DOMContentLoaded", () => {
         editorState.showStatus('Elements Refreshed', 'success');
     });
     
-    document.getElementById('export-btn').addEventListener('click', () => {
-        const html = document.documentElement.outerHTML;
-        const blob = new Blob([html], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'edited-page.html';
-        a.click();
-        URL.revokeObjectURL(url);
-        editorState.showStatus('Page Exported', 'success');
-    });
+    // document.getElementById('export-btn').addEventListener('click', () => {
+        
+    //     const html = document.documentElement.outerHTML;
+    //     const blob = new Blob([html], { type: 'text/html' });
+    //     const url = URL.createObjectURL(blob);
+    //     const a = document.createElement('a');
+    //     a.href = url;
+    //     a.download = 'edited-page.html';
+    //     a.click();
+    //     URL.revokeObjectURL(url);
+    //     editorState.showStatus('Page Exported', 'success');
+    // });
+
+    /* ---------------- SHOW ALL LINKS FUNCTION ---------------- */
+    function showAllLinks() {
+        const linksContainer = document.getElementById('links-list');
+        linksContainer.innerHTML = '';
+        
+        const allLinks = document.querySelectorAll('a');
+        let linkCount = 0;
+        
+        allLinks.forEach((link) => {
+            // Skip editor's own UI elements
+            if (editorState.isEditorElement(link)) return;
+            
+            linkCount++;
+            const linkItem = document.createElement('div');
+            linkItem.className = 'link-item';
+            
+            const linkText = document.createElement('div');
+            linkText.className = 'link-text';
+            linkText.textContent = link.innerText.trim() || 'No Text';
+            
+            const linkUrl = document.createElement('div');
+            linkUrl.className = 'link-url';
+            linkUrl.textContent = link.href || 'No URL';
+            
+            linkItem.appendChild(linkText);
+            linkItem.appendChild(linkUrl);
+            
+            // Add click event to navigate to link
+            linkItem.addEventListener('click', () => {
+                if (link.href) {
+                    window.open(link.href, '_blank');
+                    editorState.showStatus('Opening link...', 'success');
+                } else {
+                    editorState.showStatus('No URL found', 'error');
+                }
+            });
+            
+            // Add hover effect to highlight original link
+            linkItem.addEventListener('mouseenter', () => {
+                link.classList.add('highlight-target');
+            });
+            
+            linkItem.addEventListener('mouseleave', () => {
+                link.classList.remove('highlight-target');
+            });
+            
+            linksContainer.appendChild(linkItem);
+        });
+        
+        if (linkCount === 0) {
+            linksContainer.innerHTML = '<div class="empty-state">No links found on this page</div>';
+        }
+    }
 
     /* ---------------- ELEMENT INITIALIZATION ---------------- */
     function initializeElements() {
         let textContainer = sidebar.querySelector("#text-editors");
         let linkContainer = sidebar.querySelector("#link-editors");
         let imageContainer = sidebar.querySelector("#image-editors");
-        let videoContainer = sidebar.querySelector("#video-editors");
-        let sourceContainer = sidebar.querySelector("#source-editors");
+        // let videoContainer = sidebar.querySelector("#video-editors");
+        // let sourceContainer = sidebar.querySelector("#source-editors");
         let iframeContainer = sidebar.querySelector("#iframe-editors");
         let bgContainer = sidebar.querySelector("#bg-editors");
+        let colorContainer = sidebar.querySelector("#color-editors");
         
         // Clear existing editors
         textContainer.innerHTML = '';
@@ -569,11 +730,13 @@ document.addEventListener("DOMContentLoaded", () => {
         imageContainer.innerHTML = '';
         iframeContainer.innerHTML = '';
         bgContainer.innerHTML = '';
+        colorContainer.innerHTML = '';
         
-        let textCount = 0, linkCount = 0, imageCount = 0, iframeCount = 0, bgCount = 0;
-        let elements = document.querySelectorAll("h1,h2,h3,h4,h5,h6,p,span,a,img,iframe,[style*='background-image']");
+        let textCount = 0, linkCount = 0, imageCount = 0, iframeCount = 0, bgCount = 0, colorCount = 0;
+        let elements = document.querySelectorAll("div,nav,footer,pre");
+        let elementsText =document.querySelectorAll("h1,h2,h3,h4,h5,h6,p,span,a,img,iframe,[style*='background-image']");
         
-        elements.forEach((el, idx) => {
+        elementsText.forEach((el, idx) => {
             // Skip editor's own UI elements
             if (editorState.isEditorElement(el)) return;
 
@@ -596,6 +759,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 wrapper.dataset.text = el.innerText.toLowerCase();
                 wrapper.dataset.href = (el.href || '').toLowerCase();
                 wrapper.dataset.selector = selector.toLowerCase();
+                
                 
                 let counter = document.createElement("div");
                 counter.className = "element-counter";
@@ -842,6 +1006,63 @@ document.addEventListener("DOMContentLoaded", () => {
                 wrapper.appendChild(fileInput);
                 bgContainer.appendChild(wrapper);
             }
+
+            // COLOR ELEMENTS - Text elements and Box elements
+            const textElements = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'P', 'SPAN', 'PRE', 'A'];
+            const boxElements = ['DIV', 'NAV', 'FOOTER'];
+            
+            if (textElements.includes(el.tagName) || boxElements.includes(el.tagName)) {
+                colorCount++;
+                let wrapper = document.createElement("div");
+                wrapper.className = "editor-item";
+                wrapper.dataset.selector = selector.toLowerCase();
+                
+                let counter = document.createElement("div");
+                counter.className = "element-counter";
+                counter.textContent = colorCount;
+                wrapper.appendChild(counter);
+
+                let label = document.createElement("label");
+                label.textContent = el.innerText;
+                wrapper.appendChild(label);
+
+                // Color input for text elements or background color for box elements
+                let colorInput = document.createElement("input");
+                colorInput.type = "color";
+                
+                if (textElements.includes(el.tagName)) {
+                    // For text elements, change text color
+                    colorInput.placeholder = "Text Color";
+                    colorInput.value = window.getComputedStyle(el).color ? rgbToHex(window.getComputedStyle(el).color) : "#000000";
+                    
+                    colorInput.addEventListener("input", () => {
+                        el.style.color = colorInput.value;
+                        editorState.saveState('text-color-change');
+                        editorState.showStatus('Text Color Updated', 'success');
+                    });
+                } else if (boxElements.includes(el.tagName)) {
+                    // For box elements, change background color
+                    colorInput.placeholder = "Background Color";
+                    colorInput.value = window.getComputedStyle(el).backgroundColor ? rgbToHex(window.getComputedStyle(el).backgroundColor) : "#ffffff";
+                    
+                    colorInput.addEventListener("input", () => {
+                        el.style.backgroundColor = colorInput.value;
+                        editorState.saveState('bg-color-change');
+                        editorState.showStatus('Background Color Updated', 'success');
+                    });
+                }
+
+                colorInput.addEventListener('focus', () => {
+                    el.classList.add('highlight-target');
+                });
+                
+                colorInput.addEventListener('blur', () => {
+                    el.classList.remove('highlight-target');
+                });
+
+                wrapper.appendChild(colorInput);
+                colorContainer.appendChild(wrapper);
+            }
         });
         
         // Update counters
@@ -850,6 +1071,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('image-count').textContent = `(${imageCount})`;
         document.getElementById('iframe-count').textContent = `(${iframeCount})`;
         document.getElementById('bg-count').textContent = `(${bgCount})`;
+        document.getElementById('color-count').textContent = `(${colorCount})`;
         
         // Show empty states if needed
         if (textCount === 0) {
@@ -867,6 +1089,22 @@ document.addEventListener("DOMContentLoaded", () => {
         if (bgCount === 0) {
             bgContainer.innerHTML = '<div class="empty-state">No background images found</div>';
         }
+        if (colorCount === 0) {
+            colorContainer.innerHTML = '<div class="empty-state">No colorable elements found</div>';
+        }
+    }
+
+    /* ---------------- UTILITY FUNCTIONS ---------------- */
+    function rgbToHex(rgb) {
+        if (rgb.includes('#')) return rgb;
+        const rgbValues = rgb.match(/\d+/g);
+        if (!rgbValues || rgbValues.length < 3) return "#000000";
+        
+        const r = parseInt(rgbValues[0]).toString(16).padStart(2, '0');
+        const g = parseInt(rgbValues[1]).toString(16).padStart(2, '0');
+        const b = parseInt(rgbValues[2]).toString(16).padStart(2, '0');
+        
+        return `#${r}${g}${b}`;
     }
 
     /* ---------------- ENHANCED SEARCH ---------------- */
@@ -897,16 +1135,38 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     /* ---------------- SAVE FUNCTIONALITY ---------------- */
+    // saveBtn.addEventListener("click", () => {
+       
+
+
+    //     // Simulate save operation
+    //     setTimeout(() => {
+    //             editorState.showStatus('✅ Changes Saved & Published!', 'success');
+    //             editorState.showStatus('Saving changes...', 'success');
+    //             let clone = document.documentElement.cloneNode(true);
+    //             let html = '<!DOCTYPE html>\n' + clone.outerHTML;
+    //             console.log(html.replace('<button id="save-btn">💾 Save &amp; Publish</button>' , ''));
+    //     }, 1000);
+    // });
     saveBtn.addEventListener("click", () => {
-        editorState.showStatus('Saving changes...', 'success');
+    setTimeout(() => {
+        // Clone full DOM
+        let clone = document.documentElement.cloneNode(true);
+
         
-        // Simulate save operation
-        setTimeout(() => {
-            editorState.showStatus('✅ Changes Saved & Published!', 'success');
-            // In production: implement actual save logic
-            // fetch('/api/save', { method:'POST', body: JSON.stringify(data) })
-        }, 1000);
-    });
+        clone.querySelectorAll("#toolbar, #editor-controls, #save-btn,#color-editors,#color-editors,.status-indicator,.image-editors,#editor-sidebar,#editor-navbar,#links-sidebar,style[data='remove'],script[src='d.js']").forEach(el => el.remove());
+       
+
+
+
+
+     
+        let html = "<!DOCTYPE html>\n" + clone.outerHTML;
+
+
+        console.log(html);
+    }, 1000);
+});
 
     /* ---------------- KEYBOARD SHORTCUTS ---------------- */
     document.addEventListener('keydown', (e) => {
@@ -928,6 +1188,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     e.preventDefault();
                     document.getElementById('toggle-sidebar').click();
                     break;
+                case 'l':
+                    e.preventDefault();
+                    document.getElementById('show-links').click();
+                    break;
                 case 'p':
                     e.preventDefault();
                     document.getElementById('preview-mode').click();
@@ -937,6 +1201,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         if (e.key === 'Escape') {
             sidebar.classList.remove('open');
+            linksSidebar.classList.remove('open');
             document.querySelectorAll('.highlight-target').forEach(el => {
                 el.classList.remove('highlight-target');
             });
@@ -960,7 +1225,4 @@ document.addEventListener("DOMContentLoaded", () => {
         editorState.showStatus('Auto-saved');
     }, 120000);
 
-
-
 });
-
